@@ -1,0 +1,1 @@
+/usr/bin/c++  -fPIC -g -Wno-psabi  -rdynamic CMakeFiles/alogceval.dir/main.cpp.o CMakeFiles/alogceval.dir/LogEvalHandler.cpp.o -o ../../../bin/alogceval   -L/home/orangepi/Documents/moos-ivp/lib  -L/usr/local/lib  -Wl,-rpath,/home/orangepi/Documents/moos-ivp/lib:/usr/local/lib ../../../lib/libconvoy.a -lapputil -lmbutil -llogutils -lm 

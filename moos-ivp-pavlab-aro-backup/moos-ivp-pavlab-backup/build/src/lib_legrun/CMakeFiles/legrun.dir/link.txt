@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../../../lib/liblegrun.a CMakeFiles/legrun.dir/LegRun.cpp.o CMakeFiles/legrun.dir/LegRunSet.cpp.o
+/usr/bin/ranlib ../../../lib/liblegrun.a

@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC  -fPIC -g -Wno-psabi  -shared -Wl,-soname,libBHV_NavCheck.so -o ../../../lib/libBHV_NavCheck.so CMakeFiles/BHV_NavCheck.dir/BHV_NavCheck.cpp.o   -L/home/orangepi/Documents/moos-ivp/lib  -L/usr/local/lib  -Wl,-rpath,/home/orangepi/Documents/moos-ivp/lib:/usr/local/lib -lhelmivp -lbehaviors -livpbuild -llogic -livpcore -lbhvutil -lmbutil -lgeometry 

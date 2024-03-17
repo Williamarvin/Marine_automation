@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC  -fPIC -g -Wno-psabi  -shared -Wl,-soname,libBHV_PModelView.so -o ../../../lib/libBHV_PModelView.so CMakeFiles/BHV_PModelView.dir/BHV_PModelView.cpp.o   -L/home/orangepi/Documents/moos-ivp/lib  -L/usr/local/lib  -Wl,-rpath,/home/orangepi/Documents/moos-ivp/lib:/usr/local/lib -lhelmivp -lbehaviors -livpbuild -llogic -livpcore -lbhvutil -lmbutil -lgeometry 

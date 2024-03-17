@@ -1,0 +1,140 @@
+//-------------------------------------------------
+// NAME: M. Benjamin, Jason Webb MIT MechE
+// FILE: meta_vehicle.moos
+//-------------------------------------------------
+
+initialize   DEPLOY = false
+initialize   RETURN = false
+initialize   SPDLIMIT = true
+//initialize   DRIFT_X = 0.5
+//initialize   DRIFT_Y = 0.7
+initialize   AVOIDING = idle
+
+// //----------------------------------------------
+// Behavior = BHV_HSLine
+// { 
+//   name = hsline
+
+// 	time_on_leg = 5
+// 	condition = DEPLOY=true
+// }
+
+//----------------------------------------------
+// Behavior = BHV_Waypoint // initially based on BHV_Waypoint
+{ 
+  name      = survey
+  pwt       = 100
+  condition = RETURN = false
+  condition = DEPLOY = true
+	endflag   = RETURN = true
+	endflag   = EFLAG  = endings=$[CTR2]
+	endflag   = TRIAL_STATE = complete
+	cycleflag = CFLAG  = cyles=$[CTR1]
+	wptflag   = WFLAG  = waypoints=$[CTR]
+
+  updates   = WPT_UPDATE
+  perpetual = true
+
+	//wptflag_on_start = true
+
+  //           lead = 25 // lead value not used in BHV_SailWaypoint
+  //    lead_damper = 20
+  //  lead_to_start = true
+           speed = 2.0   // meters per second (default)
+    capture_line = true
+  capture_radius = 5.0
+     slip_radius = 15
+           order = normal
+	        repeat = 1
+
+      //points = pts={50,-50:150,0:250,-15:190,-75:225,-100:50,-180}
+      //points = pts={50,-50:150,0:225,-100:50,-180}          
+      //points = pts={10,-40:80,-150:140,-90:-130,-120:70,0:30,-130}          
+      //points = pts={-50,-100:150,-100:300,-250:-50,-250:-50,-100} 
+      //points = pts={50,-100:200,-50:250,-200:100,-250}  
+      polygon = 60,-40 : 60,-160 : 150,-160 : 180,-100 : 150,-40
+      // points = pts={50,-100:250,-25:300,-175:100,-250}
+      points = pts={50,-50:100,-50:100,-150:50,-50} // triangle
+      // points = pts={50,-100:100,-100:100,-200:50,-200} // rectangle
+      // points = pts={-250,120:-610,435:-700,350:-485,360:95,-30:-510,-60:-510,-400:450,-455:500,-655:-315,-770:75,-520} // octagon
+
+
+
+    visual_hints = nextpt_color=yellow
+    visual_hints = nextpt_vertex_size=8
+    visual_hints = nextpt_lcolor=gray70
+    visual_hints = vertex_color=dodger_blue, edge_color=white
+    visual_hints = vertex_size=5, edge_size=1
+}
+
+//----------------------------------------------
+Behavior=BHV_Waypoint
+{
+  name       = waypt_return
+  pwt        = 100
+  condition  = RETURN = true
+  condition  = DEPLOY = true
+  perpetual  = true
+  updates    = RETURN_UPDATE
+  endflag    = RETURN = false
+  endflag    = DEPLOY = false
+  endflag    = MISSION = complete
+
+
+	endflag    = EFLAG  = r_endings=$[CTR_02]
+	cycleflag  = CFLAG  = r_cyles=$[CTR_01]
+	wptflag    = WFLAG  = r_waypoints=$[CTR]
+
+           speed = 2.0
+  capture_radius = 10.0
+     slip_radius = 20.0
+          point = 0,-20
+ }
+
+
+//----------------------------------------------
+Behavior=BHV_SailWaypoint
+{
+  name       = sail
+  pwt       = 100
+  condition = RETURN = false
+  condition = DEPLOY = true
+	endflag   = RETURN = true
+
+  updates    = SAIL_UPDATE
+  perpetual  = true
+
+             speed     = 2.0  // meters per second
+      capture_line     = false
+    capture_radius     = 10
+       slip_radius     = 15
+  upwind_threshold     = 45   // degrees
+          patience     = 0.8  // amount of importance of course zaic
+      tacking_penalty  = 1 // [0, 1] amount by which oopposite heading magnitudes are reduced
+//   prop_installed       = true       
+//   prop_timer_trigger   = 120  // sec
+
+
+      //points = pts={50,-50:150,0:250,-15:190,-75:225,-100:50,-180}
+      //points = pts={50,-50:150,0:225,-100:50,-180}          
+      //points = pts={10,-40:80,-150:140,-90:-130,-120:70,0:30,-130}          
+      //points = pts={-50,-100:150,-100:300,-250:-50,-250:-50,-100} 
+      //points = pts={50,-100:200,-50:250,-200:100,-250}  
+      // points = pts={50,-100:250,-25:300,-175:100,-250}
+      points = pts={50,-50:100,-50:100,-150:50,-50} // triangle
+      // points = pts={50,-100:100,-100:100,-200:50,-200} // rectangle
+      // points = pts={-250,120:-610,435:-700,350:-485,360:95,-30:-510,-60:-510,-400:450,-455:500,-655:-315,-770:75,-520} // octagon
+      repeat = forever     // number of _additional_ repeats or 'forever'
+  // polar plot parameters for 0 to 180°
+  // Dramatically simplified from historic by mjs on 2/7/2023
+  // These are in heading/dimensionless magnitude pairs, _not_ speeds!
+  polar_plot = 0,0:55,50:62,50:69,50:90,50:135,50:155,50:169,44:180,42 
+
+   visual_hints = nextpt_color=yellow
+   visual_hints = nextpt_vertex_size=8
+   visual_hints = nextpt_lcolor=gray70
+   visual_hints = vertex_color=dodger_blue, edge_color=white
+   visual_hints = vertex_size=6, edge_size=1
+}
+
+

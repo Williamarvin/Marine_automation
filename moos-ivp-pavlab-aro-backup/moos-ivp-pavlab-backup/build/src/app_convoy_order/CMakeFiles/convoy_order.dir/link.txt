@@ -1,0 +1,1 @@
+/usr/bin/c++  -fPIC -g -Wno-psabi  -rdynamic CMakeFiles/convoy_order.dir/main.cpp.o CMakeFiles/convoy_order.dir/OrderHandler.cpp.o -o ../../../bin/convoy_order   -L/home/orangepi/Documents/moos-ivp/lib  -L/usr/local/lib  -Wl,-rpath,/home/orangepi/Documents/moos-ivp/lib:/usr/local/lib ../../../lib/libconvoy.a -lmbutil -lm 

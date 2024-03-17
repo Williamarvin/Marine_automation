@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../../../lib/libconvoy.a CMakeFiles/convoy.dir/ConvoyRecap.cpp.o CMakeFiles/convoy.dir/ConvoyStatRecap.cpp.o CMakeFiles/convoy.dir/ConvoySpdPolicy.cpp.o CMakeFiles/convoy.dir/EvalConvoyEngine.cpp.o CMakeFiles/convoy.dir/ConvoyOrderDetector.cpp.o
+/usr/bin/ranlib ../../../lib/libconvoy.a

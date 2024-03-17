@@ -1,0 +1,307 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% LOG FILE:       ./LOG_DECOY_17_3_2024_____22_13_55/LOG_DECOY_17_3_2024_____22_13_55._moos
+%% FILE OPENED ON  Thu Jan  1 08:00:00 1970
+%% LOGSTART            1710684834.34836
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ServerHost = localhost
+ServerPort = 9005
+Community  = decoy
+
+MOOSTimeWarp = 1
+
+
+// MIT Sailing Pavilion (PavLab)
+LatOrigin = 50
+LongOrigin = 114.263006
+
+
+//------------------------------------------------------------
+ProcessConfig = ANTLER
+{
+  MSBetweenLaunches = 100
+
+  Run = MOOSDB             @ NewConsole = false
+  Run = pShare             @ NewConsole = false
+  Run = pLogger            @ NewConsole = false
+  Run = pNodeReporter      @ NewConsole = false
+  Run = pMarinePIDV22      @ NewConsole = false
+  Run = pHelmIvP           @ NewConsole = false
+  Run = pHostInfo          @ NewConsole = false
+  Run = uFldNodeBroker     @ NewConsole = false
+  Run = pDeadManPost       @ NewConsole = false
+  Run = pRealm             @ NewConsole = false
+  Run = uFldMessageHandler @ NewConsole = false
+  Run = uProcessWatch      @ NewConsole = false
+
+  Run = iRemoteLite        @ NewConsole = true
+
+  Run = uSimMarineV22      @ NewConsole = false
+  Run = iM300              @ NewConsole = false
+  Run = iM300Health        @ NewConsole = false
+
+}
+
+
+
+//------------------------------------------------------
+// uSimMarineV22 Config Block
+
+ProcessConfig = uSimMarineV22
+{
+  AppTick   = 10
+  CommsTick = 10
+
+  start_pos = 0,0,180
+  prefix    = NAV
+
+  //rotate_speed = 0.5
+  drift_x      = 0.4
+  drift_y      = 0.5
+
+  //thrust_map = -100:-2, 0:0, 20:1, 40:2, 60:3, 80:5, 100:5
+  //thrust_map = -100:-2, 0:0, 20:1, 40:2, 60:3, 80:5, 100:5
+}
+
+
+//--------------------------------------------------------
+// iM300 Config Block
+	
+ProcessConfig = iM300
+{
+  AppTick    = 10
+  CommsTick  = 10
+
+	comms_type = client
+  port       = 29500
+	ip_addr    = 
+
+  warn_bad_nmea_len  = false   
+  warn_bad_nmea_form = false   
+	
+	stale_thresh = 15
+	
+	max_rudder  = 50
+	max_thrust  = 100
+	drive_mode  = normal
+	ignore_msg  = $GPGLL, $GPGSV, $GPVTG, $GPZDA, $CPALT, $CPIMU
+	ignore_msg  = $CPNVR, $GPGST, $CPRCM, $GNGLL, $GNGSV, $GNVTG,
+	ignore_msg  = $GNZDA, $GLGSV, $GNGSA
+	ignore_checksum_errors = true
+
+	max_appcast_events       = 8
+  // max_appcast_run_warnings = 10
+
+	// heading_source options are gps, imu, or auto where auto uses imu
+	// when available and not timed out as defined in the
+	// stale_nave_msg_thresh parameter
+  heading_source = auto    
+
+	// threshold in seconds, default is 1.5
+	stale_gps_msg_thresh = 3
+	
+	nav_prefix 			= NAV
+	gps_prefix			= GPS
+	compass_prefix	= COMPASS
+}
+
+
+//------------------------------------------------
+// iM300Health config block
+
+ProcessConfig = iM300Health
+{
+   AppTick   = 4
+   CommsTick = 4
+   
+   StaleTime = 3.0         //  Time until messages are considered stale
+   MaxHeadingDelta = 5.0   //  Max Delta allowable between IMU and GPS
+
+   LowBattThresh  = 13.0
+   FullBattThresh = 14.4
+
+   TimeAverageLength   = 2.0   // seconds
+   SpeedFaultThreshold = 0.3   // m/s
+ 
+}
+
+
+
+
+//----------------------------------------------------
+// pShare Config Block
+
+ProcessConfig = pShare
+{
+  AppTick   = 2
+  CommsTick = 2
+
+  input = route = localhost:9205
+}
+
+
+//--------------------------------------------------
+ProcessConfig = pLogger
+{
+  AppTick     = 10
+  CommsTick   = 10
+
+  File    = LOG_DECOY
+  PATH    = ./
+  SyncLog   = true @ 0.2
+  AsyncLog   = true
+  FileTimeStamp = true
+
+  Log = IVPHELM_LIFE_EVENT @ 0 nosync
+
+  // Log it all!!!!!
+  LogAuxSrc = true
+  WildCardLogging = true
+  WildCardOmitPattern = *_STATUS
+  WildCardOmitPattern = DB_VARSUMMARY
+  WildCardOmitPattern = DB_RWSUMMARY
+}
+
+//--------------------------------------------------
+// pHostInfo config block
+
+ProcessConfig = pHostInfo
+{
+  AppTick 	= 1
+  CommsTick = 1
+
+  default_hostip_force = localhost
+}
+
+
+//--------------------------------------------------------
+// uProcessWatch Config Block
+	
+ProcessConfig = uProcessWatch
+{
+  AppTick   = 2
+  CommsTick = 2
+
+  allow_retractions = true
+
+  watch_all = true // default is true
+
+  nowatch = uMAC*
+  nowatch = uXMS*
+  nowatch = uPokeDB*
+
+  summary_wait  = 12
+}
+
+
+//---------------------------------------
+// pHelmIvP Config Block
+
+ProcessConfig = pHelmIvP
+{
+  AppTick    = 4
+  CommsTick  = 4
+
+  behaviors    = targ_decoy.bhv
+  verbose      = false
+  domain       = course:0:359:360
+  domain       = speed:0:2.0:21
+}
+
+ProcessConfig = iRemoteLite
+{
+    CustomJournal = Name = DESIRED_RUDDER,Key =6, History = 10,Period = 0
+      CustomSummary = DESIRED_THRUST
+      CustomKey = 2 : JANITOR_SWITCH @ "ACTUATION:OFF"
+}
+
+//---------------------------------------
+// pNodeReporter Config Block
+	
+ProcessConfig = pNodeReporter
+{
+  AppTick     = 2
+  CommsTick   = 2
+
+  vessel_type = kayak
+}
+
+//---------------------------------------
+// pDeadManPost Config Block
+
+ProcessConfig = pDeadManPost
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  heartbeat_var   = HEARTBEAT
+  max_noheart     = 15
+  post_policy     = reset
+  active_at_start = false
+  deadflag        = DEPLOY = false
+}
+
+	
+//----------------------------------------
+// uFldMessageHandler Config Block
+	
+ProcessConfig = uFldMessageHandler
+{
+  AppTick   = 3
+  CommsTick = 3
+
+  strict_addressing = false
+}
+
+//----------------------------------------
+// uFldNodeBroker Config Block
+
+ProcessConfig = uFldNodeBroker
+{
+  AppTick   = 1
+  CommsTick = 1
+
+  try_shore_host = pshare_route=localhost:9200
+
+  bridge = src=VIEW_POLYGON
+  bridge = src=VIEW_POINT
+  bridge = src=VIEW_SEGLIST
+  bridge = src=VIEW_CIRCLE
+  bridge = src=APPCAST
+  bridge = src=NODE_REPORT_LOCAL,  alias=NODE_REPORT
+  bridge = src=NODE_MESSAGE_LOCAL, alias=NODE_MESSAGE
+}
+
+//---------------------------------------
+// pMarinePIDV22 Config Block
+	
+ProcessConfig = pMarinePIDV22
+{
+  AppTick    = 10
+  CommsTick  = 10
+
+  verbose       = true
+  depth_control = false
+  active_start  = true
+
+  // Yaw PID controller (Set for M300)
+  yaw_pid_kp             = 0.9 
+  yaw_pid_kd             = 0.6 
+  yaw_pid_ki             = 0.3  
+  yaw_pid_integral_limit = 0.3 
+
+  // Speed PID controller
+  speed_pid_kp           = 1.0
+  speed_pid_kd           = 0.0
+  speed_pid_ki           = 0.0
+  speed_pid_integral_limit = 0.07
+
+  // Maximums
+  maxrudder  = 100 // 100
+  maxthrust  = 100
+
+  // A non-zero SPEED_FACTOR overrides use of SPEED_PID
+  // Will set DESIRED_THRUST = DESIRED_SPEED * SPEED_FACTOR
+  //SPEED_FACTOR = 20
+}
+
+

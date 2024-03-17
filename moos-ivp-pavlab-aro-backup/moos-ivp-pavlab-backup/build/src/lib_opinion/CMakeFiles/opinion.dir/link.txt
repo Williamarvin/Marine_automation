@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../../../lib/libopinion.a CMakeFiles/opinion.dir/Option.cpp.o CMakeFiles/opinion.dir/OpinionRecord.cpp.o
+/usr/bin/ranlib ../../../lib/libopinion.a

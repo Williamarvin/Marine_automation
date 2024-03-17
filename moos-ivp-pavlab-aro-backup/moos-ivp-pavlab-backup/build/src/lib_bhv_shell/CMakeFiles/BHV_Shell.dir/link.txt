@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC  -fPIC -g -Wno-psabi  -shared -Wl,-soname,libBHV_Shell.so -o ../../../lib/libBHV_Shell.so CMakeFiles/BHV_Shell.dir/BHV_Shell.cpp.o   -L/home/orangepi/Documents/moos-ivp/lib  -L/usr/local/lib  -Wl,-rpath,/home/orangepi/Documents/moos-ivp/lib:/usr/local/lib -lhelmivp -lbehaviors -livpbuild -llogic -livpcore -lbhvutil -lmbutil -lgeometry 

@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../../../lib/libserialdev.a CMakeFiles/serialdev.dir/serial_device.cpp.o
+/usr/bin/ranlib ../../../lib/libserialdev.a
